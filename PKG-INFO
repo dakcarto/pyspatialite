@@ -1,0 +1,24 @@
+Metadata-Version: 1.0
+Name: pyspatialite
+Version: 3.0.1
+Summary: DB-API 2.0 interface for SQLite 3.x with Spatialite 3.x
+Home-page: http://pyspatialite.googlecode.com/
+Author: Lokkju Brennr
+Author-email: lokkju@lokkju.com
+License: zlib/libpng license
+Description: Python interface to SQLite 3 + Spatialite
+        
+        pyspatialite is an interface to the SQLite 3.x embedded relational database engine with spatialite extensions.
+        It is almost fully compliant with the Python database API version 2.0 also
+        exposes the unique features of SQLite and spatialite.
+Platform: ALL
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: zlib/libpng License
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX
+Classifier: Programming Language :: C
+Classifier: Programming Language :: Python
+Classifier: Topic :: Database :: Database Engines/Servers
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
