@@ -33,7 +33,9 @@
 #include "sqlite3.h"
 #include "spatialite.h"
 
+#ifndef SPATIALITE_EXTERN
 int spatialite_init(int verbose);
+#endif
 
 typedef struct
 {

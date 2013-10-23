@@ -89,6 +89,10 @@ class MyBuildExt(build_ext):
         if sys.platform.startswith("darwin") or not self.compiler.has_function("iconv"):
             ext.libraries.append("iconv")
 
+        # set macro to avoid redeclaration of some functions
+        if self.compiler.has_function("spatialite_init", libraries=["spatialite"]):
+            ext.define_macros.append(("SPATIALITE_EXTERN", "1"))
+
         ext.define_macros.append(("SQLITE_ENABLE_FTS3", "1"))   # build with fulltext search enabled
         ext.define_macros.append(("SQLITE_ENABLE_RTREE", "1"))   # build with fulltext search enabled
         ext.define_macros.append(("SQLITE_ENABLE_COLUMN_METADATA", "1"))   # build with fulltext search enabled
