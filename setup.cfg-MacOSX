@@ -1,0 +1,13 @@
+# The options to build the '_spatialite' extension.
+
+[build_ext]
+
+# (Mac) Kyngchaos.com frameworks
+include_dirs=/Library/Frameworks/GEOS.framework/unix/include:/Library/Frameworks/PROJ.framework/unix/include:/Library/Frameworks/SQLite3.framework/unix/include
+# (Mac) homebrew
+#include_dirs=/usr/local/include/:/usr/local/opt/sqlite/include/
+
+# (Mac) Kyngchaos.com frameworks
+library_dirs=/Library/Frameworks/GEOS.framework/unix/lib:/Library/Frameworks/PROJ.framework/unix/lib:/Library/Frameworks/SQLite3.framework/unix/lib
+# (Mac) homebrew
+#library_dirs=/usr/local/lib:/usr/local/opt/sqlite/lib
