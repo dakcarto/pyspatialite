@@ -44,7 +44,7 @@ sources = ["src/module.c", "src/connection.c", "src/cursor.c", "src/cache.c",
 
 include_dirs = []
 library_dirs = []
-libraries = ['geos','geos_c','proj']
+libraries = ['geos','geos_c','proj', 'spatialite', 'sqlite3']
 runtime_library_dirs = []
 extra_objects = []
 define_macros = []
@@ -82,57 +82,20 @@ class DocBuilder(Command):
         if rc != 0:
             print "Is sphinx installed? If not, try 'sudo easy_install sphinx'."
 
-AMALGAMATION_ROOT = "amalgamation"
-
-def get_amalgamation():
-    """Download the Spatialite amalgamation if it isn't there, already."""
-    if os.path.exists(AMALGAMATION_ROOT):
-        return
-    os.mkdir(AMALGAMATION_ROOT)
-    print "Downloading amalgation."
-
-    # find out what's current amalgamation ZIP file
-    download_page = urllib.urlopen("https://www.gaia-gis.it/fossil/libspatialite/index").read()
-    pattern = re.compile("(libspatialite-amalgamation.*?\.zip)")
-    download_file = pattern.findall(download_page)[0]
-    amalgamation_url = "http://www.gaia-gis.it/gaia-sins/" + download_file
-    zip_dir = string.replace(download_file,'.zip','')
-    # and download it
-    urllib.urlretrieve(amalgamation_url, "tmp.zip")
-
-    zf = zipfile.ZipFile("tmp.zip")
-    files = ["sqlite3.c", "headers/spatialite/sqlite3.h", "spatialite.c", "headers/spatialite/sqlite3ext.h","headers/spatialite/spatialite.h","headers/spatialite/gaiaaux.h","headers/spatialite/gaiaexif.h","headers/spatialite/gaiageo.h"]
-    for fn in files:
-        print "Extracting", fn
-        outf = open(AMALGAMATION_ROOT + os.sep + string.split(fn,'/')[-1], "wb")
-        outf.write(zf.read(zip_dir + '/' + fn))
-        outf.close()
-    zf.close()
-    os.unlink("tmp.zip")
-
 class MyBuildExt(build_ext):
 
     def build_extension(self, ext):
-        get_amalgamation()
         # sometimes iconv is built in, sometimes it isn't
-        if not self.compiler.has_function("iconv"):
-          ext.libraries.append("iconv")
-
-        #Default locations for Mac
-        ext.include_dirs.append("/Library/Frameworks/GEOS.framework/unix/include/")
-        ext.include_dirs.append("/Library/Frameworks/PROJ.framework/unix/include/")
-        ext.library_dirs.append("/Library/Frameworks/GEOS.framework/unix/lib")
-        ext.library_dirs.append("/Library/Frameworks/PROJ.framework/unix/lib")
+        if sys.platform.startswith("darwin") or not self.compiler.has_function("iconv"):
+            ext.libraries.append("iconv")
 
         ext.define_macros.append(("SQLITE_ENABLE_FTS3", "1"))   # build with fulltext search enabled
         ext.define_macros.append(("SQLITE_ENABLE_RTREE", "1"))   # build with fulltext search enabled
         ext.define_macros.append(("SQLITE_ENABLE_COLUMN_METADATA", "1"))   # build with fulltext search enabled
         ext.define_macros.append(("OMIT_FREEXL","1")) # build without FreeXL
-        ext.sources.append(os.path.join(AMALGAMATION_ROOT, "sqlite3.c"))
-        ext.sources.append(os.path.join(AMALGAMATION_ROOT, "spatialite.c"))
-        ext.include_dirs.append(AMALGAMATION_ROOT)
+
         build_ext.build_extension(self, ext)
-        
+
 
 #    def __setattr__(self, k, v):
 #        # Make sure we don't link against the SQLite library, no matter what setup.cfg says
